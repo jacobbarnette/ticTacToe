@@ -68,7 +68,6 @@ h1 {
     width: 25%;
     margin: 0 auto;
     gap: 30%;
-
 }
 
 #button0 {
@@ -83,4 +82,19 @@ h1 {
 button {
     width: 100%;
     height: 4em;
+}
+
+/* tic tac toe board */
+#gameBoardContainer {
+    display: grid;
+    grid-template-columns: repeat(3, 1fr);
+    width: 10%;
+    margin: 3% 38%;
+    gap: 2%;
+}
+
+.squares {
+    border: 1px solid black;
+    width:150px;
+    height: 150px;
 }
