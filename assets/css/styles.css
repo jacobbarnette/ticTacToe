@@ -1,100 +1,234 @@
-/*page load styling */
+*, *::after, *::before {
+    box-sizing: border-box;
+  }
+  
+  :root {
+    --cell-size: 100px;
+    --mark-size: calc(var(--cell-size) * .9);
+  }
+  
+  /*page load styling */
 .heading {
-    font-size: 4.5em;
-    font-family: 'Roboto';
-    margin-top: 15%;
-    margin-left: 41%;
-    text-shadow: 2px 4px 3px rgba(0,0,0,0.3);
+  font-size: 4.5em;
+  font-family: 'Roboto';
+  margin-top: 15%;
+  margin-left: 41%;
+  text-shadow: 2px 4px 3px rgba(0,0,0,0.3);
 }
 
 #startGame {
-    border-radius: 5px;
-    height: 50px;
-    width: 150px;
-    margin-left: 46.5%;
-    background-color: white;
+  position: absolute;
+  top: 50%
+}
+
+#startGame {
+  border-radius: 5px;
+  height: 50px;
+  width: 150px;
+  margin-left: 46.5%;
+  background-color: white;
 }
 
 /*choose player styling */
 h1 {
-    font-size: 4.5em;
-    font-family: 'Roboto';
-    margin-left: 41%;
-    text-shadow: 2px 4px 3px rgba(0,0,0,0.3);
-    margin-top: 3%;
+  font-size: 4.5em;
+  font-family: 'Roboto';
+  margin-left: 41%;
+  text-shadow: 2px 4px 3px rgba(0,0,0,0.3);
+  margin-top: 3%;
+  position: absolute;
+  width: 100%;
+  top: 0%
 }
+
+
 .moveHeading {
-    animation: slideUp 2s;
+  animation: slideUp 2s;
 }
 
 @keyframes slideUp {
-    from {
-        margin-top: 15%;
-    }
-    to {
-        margin-top: 3%;
-    }
+  from {
+      margin-top: 15%;
+  }
+  to {
+      margin-top: 3%;
+  }
 }
 
 .slideAiBtn {
-    animation: slideLeft 2s;
+  animation: slideLeft 2s;
 }
 
 @keyframes slideLeft {
-    from {
-        margin-left: 0%;
-    }
-    to {
-        margin-left: 0%;
-    }
+  from {
+      margin-left: 0%;
+  }
+  to {
+      margin-left: 0%;
+  }
 }
 
 .slideTwoPlayer {
-    animation: slideRight 2s;
+  animation: slideRight 2s;
 }
 
 @keyframes slideRight {
-    from {
-        margin-right: 0%;
-    }
-    to {
-        margin-right: 0%;
-    }
+  from {
+      margin-right: 0%;
+  }
+  to {
+      margin-right: 0%;
+  }
 }
 
 #choosePlayerContainer {
-    display: grid;
-    grid-template-columns: repeat(2, 1fr);
-    width: 25%;
-    margin: 0 auto;
-    gap: 30%;
+  display: grid;
+  grid-template-columns: repeat(2, 1fr);
+  width: 25%;
+  margin: 0 auto;
+  gap: 30%;
+  position:absolute;
+  top: 20%;
+  left: 37%;
 }
 
-#button0 {
-    
-}
-
-#button1 {
-    
-    
-}
 
 button {
-    width: 100%;
-    height: 4em;
+  width: 100%;
+  height: 4em;
 }
-
-/* tic tac toe board */
-#gameBoardContainer {
+  body {
+    margin: 0;
+  }
+  .hidden {
+    display: none;
+  }
+  .board {
+    width: 100vw;
+    height: 100vh;
     display: grid;
-    grid-template-columns: repeat(3, 1fr);
-    width: 10%;
-    margin: 3% 38%;
-    gap: 2%;
-}
-
-.squares {
+    justify-content: center;
+    align-content: center;
+    justify-items: center;
+    align-items: center;
+    grid-template-columns: repeat(3, auto)
+  }
+  
+  .cell {
+    width: var(--cell-size);
+    height: var(--cell-size);
     border: 1px solid black;
-    width:150px;
-    height: 150px;
-}
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    position: relative;
+    cursor: pointer;
+  }
+  
+  .cell:first-child,
+  .cell:nth-child(2),
+  .cell:nth-child(3) {
+    border-top: none;
+  }
+  
+  .cell:nth-child(3n + 1) {
+    border-left: none;
+  }
+  
+  .cell:nth-child(3n + 3) {
+    border-right: none;
+  }
+  
+  .cell:last-child,
+  .cell:nth-child(8),
+  .cell:nth-child(7) {
+    border-bottom: none;
+  }
+  
+  .cell.x,
+  .cell.circle {
+    cursor: not-allowed;
+  }
+  
+  .cell.x::before,
+  .cell.x::after,
+  .cell.circle::before {
+    background-color: black;
+  }
+  
+  .board.x .cell:not(.x):not(.circle):hover::before,
+  .board.x .cell:not(.x):not(.circle):hover::after,
+  .board.circle .cell:not(.x):not(.circle):hover::before {
+    background-color: lightgrey;
+  }
+  
+  .cell.x::before,
+  .cell.x::after,
+  .board.x .cell:not(.x):not(.circle):hover::before,
+  .board.x .cell:not(.x):not(.circle):hover::after {
+    content: '';
+    position: absolute;
+    width: calc(var(--mark-size) * .15);
+    height: var(--mark-size);
+  }
+  
+  .cell.x::before,
+  .board.x .cell:not(.x):not(.circle):hover::before {
+    transform: rotate(45deg);
+  }
+  
+  .cell.x::after,
+  .board.x .cell:not(.x):not(.circle):hover::after {
+    transform: rotate(-45deg);
+  }
+  
+  .cell.circle::before,
+  .cell.circle::after,
+  .board.circle .cell:not(.x):not(.circle):hover::before,
+  .board.circle .cell:not(.x):not(.circle):hover::after {
+    content: '';
+    position: absolute;
+    border-radius: 50%;
+  }
+  
+  .cell.circle::before,
+  .board.circle .cell:not(.x):not(.circle):hover::before {
+    width: var(--mark-size);
+    height: var(--mark-size);
+  }
+  
+  .cell.circle::after,
+  .board.circle .cell:not(.x):not(.circle):hover::after {
+    width: calc(var(--mark-size) * .7);
+    height: calc(var(--mark-size) * .7);
+    background-color: white;
+  }
+  
+  .winning-message {
+    display: flex;
+    position: fixed;
+    top: 0;
+    left: 0;
+    right: 0;
+    bottom: 0;
+    background-color: rgba(0, 0, 0, .9);
+    justify-content: center;
+    align-items: center;
+    color: white;
+    font-size: 5rem;
+    flex-direction: column;
+  }
+  
+  .winning-message button {
+    font-size: 3rem;
+    background-color: white;
+    border: 1px solid black;
+    padding: .25em .5em;
+    cursor: pointer;
+  }
+  
+  .winning-message button:hover {
+    background-color: black;
+    color: white;
+    border-color: white;
+  }

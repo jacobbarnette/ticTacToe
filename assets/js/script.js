@@ -1,24 +1,39 @@
 const DOM = (function(){
-    /*initial 'load screen' */
+    const cellElements = document.querySelectorAll('[data-cell]');
+    const board = document.getElementById('board');
+    const X_class = 'x';
+    const CIRCLE_CLASS = 'circle';
+    let circleTurn;
+    const winningSolution = [
+        [0, 1, 2],
+        [3, 4, 5], 
+        [6, 7, 8],
+        [0, 3, 6],
+        [1, 4, 7],
+        [2, 5, 8],
+        [0, 4, 8],
+        [2, 4, 6]
+    ]
+
+    cellElements.forEach(element => {
+        element.addEventListener('click', handleClick, { once: true})
+    });
+
     let body = document.getElementById('body');
     let button = document.createElement('button');
-    let ticTacToe = document.createElement('h1'); 
-    let container = document.createElement('div');
-    container.setAttribute('id', 'container');
-    body.appendChild(container);
+    let ticTacToe = document.getElementById('header'); 
     let introContainer = document.createElement('div');
     introContainer.setAttribute('id', 'introContainer');
     introContainer.appendChild(ticTacToe);
     introContainer.appendChild(button);
-    container.appendChild(introContainer);
-    ticTacToe.textContent = 'Tic Tac Toe';
-    ticTacToe.setAttribute('class', 'heading')
+    body.appendChild(introContainer);
+   
+    
     button.textContent = 'Start Game';
     button.setAttribute('id', 'startGame');
     body.appendChild(introContainer);
     button.addEventListener('click', choosePlayers)
-    
-    /*screen for game selection*/
+   
     function choosePlayers() {
         ticTacToe.setAttribute('class', 'moveHeading');
         ticTacToe.classList.remove('heading')
@@ -31,91 +46,79 @@ const DOM = (function(){
             choosePlayerContainer.appendChild(button);
             body.appendChild(choosePlayerContainer);
         }
+       
         let aiBtn = document.getElementById('button0');
-            aiBtn.textContent = 'AI';
-            aiBtn.setAttribute('class', 'slideAiBtn');
-            aiBtn.addEventListener('click', aiBoard);
-
-    function aiBoard() {
-        
-       aiBtn.removeEventListener('click', aiBoard);
-       twoPlayers.removeEventListener('click', twoPlayerBoard);
-        let gameBoard = [];
-        let gameBoardContainer = document.createElement('div');
-        gameBoardContainer.setAttribute('id','gameBoardContainer');
-        container.appendChild(gameBoardContainer);
-            for(let i = 0; i < 9; i++){
-                    let gameboardSquares = document.createElement('div');
-                        gameboardSquares.setAttribute('class', 'squares');
-                        gameboardSquares.setAttribute('id', `square${i}`);
-                        gameBoard.push(gameboardSquares);
-                        gameBoardContainer.appendChild(gameboardSquares);
-                        body.appendChild(gameBoardContainer);
-                    }
-                /*function calls for game logic for ai */
-                /*two player mode until ai programmed */
-                twoPlayerGame(gameBoard)
-        }
-    
-    function twoPlayerGame(gameBoard){
-        let turnCounter = 0;
-        let player1 = new playerFactory(`Player 1`, 'X');
-        let player2 = new playerFactory('Player 2', 'O');
-        gameBoard.forEach(element => {
-            element.addEventListener('click', function(){
-                if(this.textContent === player1.marker || this.textContent === player2.marker){
-                    alert('Sorry, There is already a mark there')
-                } else {
-                    if(turnCounter % 2 === 0 && turnCounter <= 9){
-                        this.textContent = player1.marker;
-                        turnCounter++;
-                    } else if (turnCounter % 2 != 0 && turnCounter <= 9) {
-                        this.textContent = player2.marker;
-                        turnCounter++;
-                    }
-                }
-            });
-        });
-    }
-    
-function playerFactory(name, marker) {
-    this.name = name;
-    this.marker = marker;
-}
-
+        aiBtn.textContent = 'AI';
+        aiBtn.setAttribute('class', 'slideAiBtn');
+        aiBtn.addEventListener('click', gameBoard);
         let twoPlayers = document.getElementById('button1');
         twoPlayers.textContent = 'Two Players';
         twoPlayers.setAttribute('class', 'slideTwoPlayer');
-        twoPlayers.addEventListener('click', twoPlayerBoard);
+        twoPlayers.addEventListener('click', gameBoard);
+    }
+        
 
-        function twoPlayerBoard() {
-            twoPlayers.removeEventListener('click', twoPlayerBoard);
-            aiBtn.removeEventListener('click', aiBoard);
-            let gameBoard = [];
-            let gameBoardContainer = document.createElement('div')
-                gameBoardContainer.setAttribute('id','gameBoardContainer');
-                container.appendChild(gameBoardContainer);
-                    for(let i = 0; i < 9; i++){
-                        let gameboardSquares = document.createElement('div');
-                            gameboardSquares.setAttribute('class', 'squares')
-                            gameboardSquares.setAttribute('id', `square${i}`);
-                            gameBoard.push(gameboardSquares);
-                            gameBoardContainer.appendChild(gameboardSquares);
-                            body.appendChild(gameBoardContainer);
-                        }
-                        twoPlayerGame(gameBoard);
+        function gameBoard(event){
+            board.classList.remove('hidden');
+            board.classList.add('board')
         }
 
-       
-    }
+        function handleClick(e){
+            const cell = e.target;
+            const currentClass = circleTurn ? CIRCLE_CLASS : X_class
+            
+            placeMark(cell, currentClass);
+            if(checkWin(currentClass)) {
+              if(currentClass === X_class){
+                   
+                    const winMsgContainer = document.createElement('div');
+                  winMsgContainer.classList.add('winning-message')
+            const winMsg =  document.createElement('div');
+            winMsg.textContent = 'X Won!'   
+            const restartBtn = document.createElement('button')
+            restartBtn.textContent = 'Restart';
+            winMsgContainer.classList.add('winning-message');
+            winMsgContainer.appendChild(winMsg);
+            body.appendChild(winMsgContainer)
+              }
+              
+            }
+           
+        }
 
-    function winningSolution() {
-        /*start here tomorrow
-        maybe read on AI and minmax to create AI first
-        then once AI is created, we can then worry about winning solution
-        */
+
+function placeMark(cell, currentClass){
+    cell.classList.add(currentClass);
+    swapTurn()
+    setBoardHoverClass()
+}
+
+function swapTurn(){
+    circleTurn = !circleTurn;
+}
+
+function setBoardHoverClass(){
+    board.classList.remove(X_class);
+    board.classList.remove(CIRCLE_CLASS);
+    if(circleTurn){
+        board.classList.add(CIRCLE_CLASS);
+    } else {
+        board.classList.add(X_class);
     }
+}
+
+function checkWin(currentlClass) {
+   return winningSolution.some(combination => {
+       return combination.every(index => {
+           return cellElements[index].classList.contains(currentlClass)
+       })
+   })
+}
+    
  })();
+
+
+
 
 
 
