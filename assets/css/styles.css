@@ -206,7 +206,7 @@ button {
   
   .winning-message {
     display: flex;
-    position: fixed;
+    position: absolute;
     top: 0;
     left: 0;
     right: 0;
@@ -232,3 +232,9 @@ button {
     color: white;
     border-color: white;
   }
+
+#restartBtn {
+  border-radius: 2%;
+  width: 20%;
+  height: 10%;
+}

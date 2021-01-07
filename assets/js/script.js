@@ -16,7 +16,7 @@ const DOM = (function(){
     ]
 
     cellElements.forEach(element => {
-        element.addEventListener('click', handleClick, { once: true})
+        element.addEventListener('click', handleClick)
     });
 
     let body = document.getElementById('body');
@@ -66,24 +66,35 @@ const DOM = (function(){
         function handleClick(e){
             const cell = e.target;
             const currentClass = circleTurn ? CIRCLE_CLASS : X_class
-            
+            if (cell.classList.contains('x') || (cell.classList.contains('circle'))){
+                alert('There is already a mark there');
+                cell.classList.remove(currentClass);
+            }
+            const winMsgContainer = document.createElement('div');
+            winMsgContainer.classList.add('winning-message');
+            winMsgContainer.setAttribute('id', 'winMsgContainer');
+            const winMsg =  document.createElement('div');
+            const restartBtn = document.createElement('button')
+            restartBtn.setAttribute('id', 'restartBtn')
+            restartBtn.textContent = 'Restart';
             placeMark(cell, currentClass);
             if(checkWin(currentClass)) {
-              if(currentClass === X_class){
-                   
-                    const winMsgContainer = document.createElement('div');
-                  winMsgContainer.classList.add('winning-message')
-            const winMsg =  document.createElement('div');
-            winMsg.textContent = 'X Won!'   
-            const restartBtn = document.createElement('button')
-            restartBtn.textContent = 'Restart';
-            winMsgContainer.classList.add('winning-message');
-            winMsgContainer.appendChild(winMsg);
-            body.appendChild(winMsgContainer)
+              if(currentClass === X_class){           
+                winMsg.textContent = 'X Won!'   
+                winMsgContainer.classList.add('winning-message');
+                winMsgContainer.appendChild(winMsg);
+                winMsgContainer.appendChild(restartBtn)
+                body.appendChild(winMsgContainer)
+              } else {
+                winMsg.textContent = 'O Won!'   
+                winMsgContainer.classList.add('winning-message');
+                winMsgContainer.appendChild(winMsg);
+                winMsgContainer.appendChild(restartBtn)
+                body.appendChild(winMsgContainer)
               }
-              
+              restartBtn.addEventListener('click', reset);
             }
-           
+          
         }
 
 
@@ -113,6 +124,17 @@ function checkWin(currentlClass) {
            return cellElements[index].classList.contains(currentlClass)
        })
    })
+}
+
+function reset() {
+    const winMsgContainer = document.getElementById('winMsgContainer');
+    winMsgContainer.classList.remove('winning-message');
+    cellElements.forEach(element => {
+       if(element.classList.contains('x') || (element.classList.contains('circle'))){
+           element.classList.remove('x');
+           element.classList.remove('circle')
+       }
+    });
 }
     
  })();
