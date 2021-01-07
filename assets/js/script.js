@@ -16,7 +16,7 @@ const DOM = (function(){
     ]
 
     cellElements.forEach(element => {
-        element.addEventListener('click', handleClick)
+        element.addEventListener('click', handleClick, { once: true})
     });
 
     let body = document.getElementById('body');
@@ -66,10 +66,7 @@ const DOM = (function(){
         function handleClick(e){
             const cell = e.target;
             const currentClass = circleTurn ? CIRCLE_CLASS : X_class
-            if (cell.classList.contains('x') || (cell.classList.contains('circle'))){
-                alert('There is already a mark there');
-                cell.classList.remove(currentClass);
-            }
+            console.log(cell.classList);
             const winMsgContainer = document.createElement('div');
             winMsgContainer.classList.add('winning-message');
             winMsgContainer.setAttribute('id', 'winMsgContainer');
@@ -134,7 +131,12 @@ function reset() {
            element.classList.remove('x');
            element.classList.remove('circle')
        }
+       cellElements.forEach(element => {
+        element.addEventListener('click', handleClick, { once: true})
     });
+    });
+    swapTurn();
+    setBoardHoverClass()
 }
     
  })();
